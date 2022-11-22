@@ -18,14 +18,18 @@ public class PlayerHealth : MonoBehaviour
     public void TakeDamage(int damage)
     {
         _currentHealth -= damage;
-        _currentHealth = _currentHealth < _minHealth ? _minHealth : _currentHealth;
-        HealthChanged?.Invoke(_currentHealth, _maxHealth);
+        RunEventWithCorrectedHealth();
     }
 
     public void TakeHealth(int health)
     {
         _currentHealth += health;
-        _currentHealth = _currentHealth > _maxHealth ? _maxHealth : _currentHealth;
-        HealthChanged?.Invoke(_currentHealth, _maxHealth);
+        RunEventWithCorrectedHealth();
     }
+
+    private void RunEventWithCorrectedHealth()
+    {
+        _currentHealth = Mathf.Clamp(_currentHealth, _minHealth, _maxHealth);
+        HealthChanged?.Invoke(_currentHealth, _maxHealth);
+    } 
 }
