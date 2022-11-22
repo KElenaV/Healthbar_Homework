@@ -1,15 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class HealthPoints : MonoBehaviour
 {
     [SerializeField] private TMP_Text _text;
-    [SerializeField] private PlayerHealth _playerHealth;
 
-    public void ChangeHealthPoints()
+    private void OnEnable()
     {
-        _text.text = _playerHealth.CurrentHealth.ToString();
+        PlayerHealth.HealthChanged += OnHealthChanged;
+    }
+
+    private void OnDisable()
+    {
+        PlayerHealth.HealthChanged -= OnHealthChanged;
+    }
+
+    public void OnHealthChanged(int currentHealth)
+    {
+        _text.text = currentHealth.ToString();
     }
 }

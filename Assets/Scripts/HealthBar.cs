@@ -1,21 +1,33 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-    [SerializeField] private PlayerHealth _playerHealth;
     [SerializeField] private Slider _slider;
 
     private float _speed = 0.001f;
-    private float _conversionIndex = 100f;
-    private float _previousValue = 1f;
+    private float _conversionIndex;
     private float _targetValue;
 
-    public void ChangeHealthValue()
+    private void Awake()
     {
-        _targetValue = (float)_playerHealth.CurrentHealth / _conversionIndex;
+        _conversionIndex = PlayerHealth.MaxHealth;
+    }
+
+    private void OnEnable()
+    {
+        PlayerHealth.HealthChanged += OnHealthChanged;
+    }
+
+    private void OnDisable()
+    {
+        PlayerHealth.HealthChanged -= OnHealthChanged;
+    }
+
+    public void OnHealthChanged(int currentHealth)
+    {
+        _targetValue = (float)currentHealth / _conversionIndex;
         StartCoroutine(ChangeValue());
     }
 
@@ -27,5 +39,4 @@ public class HealthBar : MonoBehaviour
             yield return null;
         }
     }
-
 }
