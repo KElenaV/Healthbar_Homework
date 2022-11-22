@@ -3,31 +3,29 @@ using UnityEngine.Events;
 
 public class PlayerHealth : MonoBehaviour
 {
-    public static readonly int MaxHealth = 100;
+    private readonly int _maxHealth = 100;
+    private readonly int _minHealth = 0;
+    private int _currentHealth;
 
-    private int _minHealth = 0;
-
-    public static event UnityAction<int> HealthChanged;
-
-    public int CurrentHealth { get; private set; }
+    public event UnityAction<int, int> HealthChanged;
 
     private void Awake()
     {
-        CurrentHealth = MaxHealth;
-        HealthChanged?.Invoke(CurrentHealth);
+        _currentHealth = _maxHealth;
+        HealthChanged?.Invoke(_currentHealth, _maxHealth);
     }
 
     public void TakeDamage(int damage)
     {
-        CurrentHealth -= damage;
-        CurrentHealth = CurrentHealth < _minHealth ? _minHealth : CurrentHealth;
-        HealthChanged?.Invoke(CurrentHealth);
+        _currentHealth -= damage;
+        _currentHealth = _currentHealth < _minHealth ? _minHealth : _currentHealth;
+        HealthChanged?.Invoke(_currentHealth, _maxHealth);
     }
 
     public void TakeHealth(int health)
     {
-        CurrentHealth += health;
-        CurrentHealth = CurrentHealth > MaxHealth ? MaxHealth : CurrentHealth;
-        HealthChanged?.Invoke(CurrentHealth);
+        _currentHealth += health;
+        _currentHealth = _currentHealth > _maxHealth ? _maxHealth : _currentHealth;
+        HealthChanged?.Invoke(_currentHealth, _maxHealth);
     }
 }

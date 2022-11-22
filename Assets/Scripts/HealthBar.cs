@@ -5,29 +5,24 @@ using UnityEngine.UI;
 public class HealthBar : MonoBehaviour
 {
     [SerializeField] private Slider _slider;
+    [SerializeField] private PlayerHealth _playerHealth;
 
     private float _speed = 0.001f;
-    private float _conversionIndex;
     private float _targetValue;
-
-    private void Awake()
-    {
-        _conversionIndex = PlayerHealth.MaxHealth;
-    }
 
     private void OnEnable()
     {
-        PlayerHealth.HealthChanged += OnHealthChanged;
+        _playerHealth.HealthChanged += OnHealthChanged;
     }
 
     private void OnDisable()
     {
-        PlayerHealth.HealthChanged -= OnHealthChanged;
+        _playerHealth.HealthChanged -= OnHealthChanged;
     }
 
-    public void OnHealthChanged(int currentHealth)
+    public void OnHealthChanged(int currentHealth, int maxHealth)
     {
-        _targetValue = (float)currentHealth / _conversionIndex;
+        _targetValue = (float)currentHealth / maxHealth;
         StartCoroutine(ChangeValue());
     }
 
